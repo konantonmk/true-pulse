@@ -12,6 +12,11 @@
   const i18n = window.TruePointI18n || { en: {}, localized: {}, countryNames: {} };
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const canUseBackend = window.location.protocol !== 'file:';
+
+  function apiUrl(endpoint) {
+    return new URL(`api/${endpoint}`, window.location.href).href;
+  }
 
   function t(key) {
     return (i18n.localized[state.lang] && i18n.localized[state.lang][key])
@@ -33,18 +38,23 @@
   }
 
   async function init() {
-    try {
-      const response = await fetch('/api/catalog.php', { headers: { Accept: 'application/json' } });
-      const data = await response.json();
-      if (!data.ok) throw new Error(data.error || 'Catalog failed');
-      state.catalog = data.content;
-      state.settings = data.settings;
-      state.paypal = data.paypal;
-    } catch (error) {
-      console.error(error);
-      state.catalog = fallbackCatalog();
-      state.settings = {};
-      state.paypal = { configured: false, currency: 'EUR', clientId: '' };
+    if (canUseBackend) {
+      try {
+        const response = await fetch(apiUrl('catalog.php'), { headers: { Accept: 'application/json' } });
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok || !contentType.includes('application/json')) {
+          throw new Error('Catalog endpoint unavailable');
+        }
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.error || 'Catalog failed');
+        state.catalog = data.content;
+        state.settings = data.settings;
+        state.paypal = data.paypal;
+      } catch (error) {
+        useFallbackCatalog();
+      }
+    } else {
+      useFallbackCatalog();
     }
 
     setupLanguageSelect();
@@ -81,6 +91,7 @@
       renderPricing();
       renderGuides();
       renderFaqs();
+      bindCheckout();
       updateCheckoutLabels();
     });
   }
@@ -128,7 +139,7 @@
     for (const plan of state.catalog.plans || []) {
       const card = document.createElement('article');
       card.className = `pricing-card${plan.featured ? ' featured' : ''}`;
-      const buttonTag = plan.featured ? 'md-filled-button' : 'md-outlined-button';
+      const buttonClass = plan.featured ? 'tp-button tp-button--filled' : 'tp-button tp-button--outlined';
       card.innerHTML = `
         ${plan.featured ? `<span class="best-value">${escapeHtml(t('pricing.best'))}</span>` : ''}
         <h3>${escapeHtml(t(plan.name_key))}</h3>
@@ -140,13 +151,10 @@
           <li>${escapeHtml(t('pricing.feature.3'))}</li>
           <li>${escapeHtml(t('pricing.feature.4'))}</li>
         </ul>
-        <${buttonTag} data-plan-trigger="${plan.id}">${escapeHtml(t('pricing.choose'))}</${buttonTag}>
+        <button class="${buttonClass}" type="button" data-plan-trigger="${plan.id}">${escapeHtml(t('pricing.choose'))}</button>
       `;
       grid.append(card);
     }
-    $$('#pricingGrid [data-plan-trigger]').forEach((button) => {
-      button.addEventListener('click', () => openCheckout(button.dataset.planTrigger));
-    });
   }
 
   function renderGuides() {
@@ -189,23 +197,22 @@
   }
 
   function bindCheckout() {
-    $('#closeCheckout').addEventListener('click', () => $('#checkoutDialog').close());
+    const closeButton = $('#closeCheckout');
+    if (!closeButton.dataset.checkoutBound) {
+      closeButton.dataset.checkoutBound = 'true';
+      closeButton.addEventListener('click', closeCheckout);
+    }
     $$('[data-plan-trigger]').forEach((button) => {
+      if (button.dataset.checkoutBound) return;
+      button.dataset.checkoutBound = 'true';
       button.addEventListener('click', () => openCheckout(button.dataset.planTrigger));
     });
   }
 
   function updateCheckoutLabels() {
-    const labels = [
-      ['#customerName', 'checkout.name'],
-      ['#customerEmail', 'checkout.email'],
-      ['#customerReceiver', 'checkout.receiver'],
-      ['#customerNotes', 'checkout.notes'],
-    ];
-    for (const [selector, key] of labels) {
-      const field = $(selector);
-      if (field) field.setAttribute('label', t(key));
-    }
+    $$('[data-field-label]').forEach((node) => {
+      node.textContent = t(node.dataset.fieldLabel);
+    });
   }
 
   function openCheckout(planId) {
@@ -227,7 +234,25 @@
       renderPayPalButtons();
     }
 
-    $('#checkoutDialog').show();
+    openCheckoutDialog();
+  }
+
+  function openCheckoutDialog() {
+    const dialog = $('#checkoutDialog');
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+      return;
+    }
+    dialog.setAttribute('open', '');
+  }
+
+  function closeCheckout() {
+    const dialog = $('#checkoutDialog');
+    if (typeof dialog.close === 'function') {
+      dialog.close();
+      return;
+    }
+    dialog.removeAttribute('open');
   }
 
   function renderCountrySelect() {
@@ -256,7 +281,7 @@
         const payload = checkoutPayload();
         if (!payload) throw new Error('Missing customer fields');
         $('#checkoutStatus').textContent = t('checkout.creating');
-        const response = await fetch('/api/create-order.php', {
+        const response = await fetch(apiUrl('create-order.php'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify(payload),
@@ -268,7 +293,7 @@
       },
       onApprove: async (data) => {
         $('#checkoutStatus').textContent = t('checkout.capturing');
-        const response = await fetch('/api/capture-order.php', {
+        const response = await fetch(apiUrl('capture-order.php'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ paypal_order_id: data.orderID, local_id: state.pendingLocalOrder }),
@@ -342,18 +367,103 @@
       .replaceAll("'", '&#039;');
   }
 
+  function useFallbackCatalog() {
+    state.catalog = fallbackCatalog();
+    state.settings = {};
+    state.paypal = { configured: false, currency: 'EUR', clientId: '' };
+  }
+
   function fallbackCatalog() {
     return {
-      languages: [{ code: 'en', native: 'English' }],
-      plans: [
-        { id: 'monthly', name_key: 'plan.monthly.name', persona_key: 'plan.monthly.persona', price: 50 },
-        { id: 'quarterly', name_key: 'plan.quarterly.name', persona_key: 'plan.quarterly.persona', price: 120 },
-        { id: 'annual', name_key: 'plan.annual.name', persona_key: 'plan.annual.persona', price: 380, featured: true },
+      languages: [
+        { code: 'en', label: 'English', native: 'English' },
+        { code: 'el', label: 'Greek', native: 'Ελληνικά' },
+        { code: 'tr', label: 'Turkish', native: 'Türkçe' },
+        { code: 'mk', label: 'Macedonian', native: 'Македонски' },
+        { code: 'sq', label: 'Albanian', native: 'Shqip' },
+        { code: 'sr', label: 'Serbian', native: 'Српски' },
+        { code: 'bs', label: 'Bosnian', native: 'Bosanski' },
+        { code: 'hr', label: 'Croatian', native: 'Hrvatski' },
+        { code: 'ro', label: 'Romanian', native: 'Română' },
+        { code: 'et', label: 'Estonian', native: 'Eesti' },
+        { code: 'lv', label: 'Latvian', native: 'Latviešu' },
+        { code: 'lt', label: 'Lithuanian', native: 'Lietuvių' },
+        { code: 'hu', label: 'Hungarian', native: 'Magyar' },
       ],
-      countries: [],
-      capabilities: [],
-      receiver_guides: [],
-      faqs: [],
+      plans: [
+        {
+          id: 'monthly',
+          name: '1-Month RTK Subscription',
+          name_key: 'plan.monthly.name',
+          duration: '1 month',
+          duration_key: 'plan.monthly.duration',
+          price: 50,
+          cogs: 25,
+          duration_days: 31,
+          persona_key: 'plan.monthly.persona',
+          featured: false,
+        },
+        {
+          id: 'quarterly',
+          name: '3-Month RTK Subscription',
+          name_key: 'plan.quarterly.name',
+          duration: '3 months',
+          duration_key: 'plan.quarterly.duration',
+          price: 120,
+          cogs: 70,
+          duration_days: 93,
+          persona_key: 'plan.quarterly.persona',
+          featured: false,
+        },
+        {
+          id: 'annual',
+          name: '1-Year RTK Subscription',
+          name_key: 'plan.annual.name',
+          duration: '1 year',
+          duration_key: 'plan.annual.duration',
+          price: 380,
+          cogs: 200,
+          duration_days: 366,
+          persona_key: 'plan.annual.persona',
+          featured: true,
+        },
+      ],
+      countries: [
+        { code: 'CY', name: 'Cyprus', rights: 'exclusive', mountpoint: 'CYPRUS_VRS' },
+        { code: 'MK', name: 'North Macedonia', rights: 'exclusive', mountpoint: 'MACEDONIA_VRS' },
+        { code: 'ME', name: 'Montenegro', rights: 'exclusive', mountpoint: 'MONTENEGRO_VRS' },
+        { code: 'BA', name: 'Bosnia & Herzegovina', rights: 'exclusive', mountpoint: 'BOSNIA_VRS' },
+        { code: 'HR', name: 'Croatia', rights: 'exclusive', mountpoint: 'CROATIA_VRS' },
+        { code: 'RO', name: 'Romania', rights: 'exclusive', mountpoint: 'ROMANIA_VRS' },
+        { code: 'MD', name: 'Moldova', rights: 'exclusive', mountpoint: 'MOLDOVA_VRS' },
+        { code: 'EE', name: 'Estonia', rights: 'exclusive', mountpoint: 'ESTONIA_VRS' },
+        { code: 'LV', name: 'Latvia', rights: 'exclusive', mountpoint: 'LATVIA_VRS' },
+        { code: 'LT', name: 'Lithuania', rights: 'exclusive', mountpoint: 'LITHUANIA_VRS' },
+        { code: 'RS', name: 'Serbia', rights: 'online', mountpoint: 'SERBIA_VRS' },
+        { code: 'HU', name: 'Hungary', rights: 'online', mountpoint: 'HUNGARY_VRS' },
+        { code: 'TR', name: 'Turkey', rights: 'online', mountpoint: 'TURKEY_VRS' },
+      ],
+      capabilities: [
+        { icon: 'satellite_alt', title_key: 'cap.multi.title', body_key: 'cap.multi.body' },
+        { icon: 'gps_fixed', title_key: 'cap.accuracy.title', body_key: 'cap.accuracy.body' },
+        { icon: 'public', title_key: 'cap.local.title', body_key: 'cap.local.body' },
+        { icon: 'devices', title_key: 'cap.hardware.title', body_key: 'cap.hardware.body' },
+      ],
+      receiver_guides: [
+        { id: 'leica', brand: 'Leica / Hexagon', steps_key: 'guide.leica.steps' },
+        { id: 'trimble', brand: 'Trimble', steps_key: 'guide.trimble.steps' },
+        { id: 'topcon', brand: 'Topcon / Sokkia', steps_key: 'guide.topcon.steps' },
+        { id: 'e-survey', brand: 'E-Survey / Emlid / Generic Android', steps_key: 'guide.generic.steps' },
+        { id: 'uav', brand: 'UAV / Drone RTK', steps_key: 'guide.uav.steps' },
+      ],
+      faqs: [
+        { q_key: 'faq.what.q', a_key: 'faq.what.a' },
+        { q_key: 'faq.hardware.q', a_key: 'faq.hardware.a' },
+        { q_key: 'faq.activation.q', a_key: 'faq.activation.a' },
+        { q_key: 'faq.payment.q', a_key: 'faq.payment.a' },
+        { q_key: 'faq.support.q', a_key: 'faq.support.a' },
+        { q_key: 'faq.tax.q', a_key: 'faq.tax.a' },
+      ],
     };
   }
 

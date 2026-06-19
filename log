@@ -53,3 +53,5 @@ Decision log for TruePoint CORS Network website
 11. Sites plugin
    The Sites workflow was considered because it was requested, but the Sites hosting target is Cloudflare Worker-compatible output. This project intentionally stays PHP/cPanel-ready because the user explicitly requested PHP or Java backend and cPanel deployment instructions.
 
+12. File preview and control fallback fix
+   The public page now uses relative asset paths so `public/index.html` can be opened directly from disk for review. Critical navigation, purchase buttons, and the checkout modal use native HTML controls styled with Material-inspired tokens so the page remains usable even if the optional Material Web module or PHP API is not available during local preview.

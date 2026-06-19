@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <script type="module" src="/assets/js/material.js"></script>
-  <script src="/assets/js/translations.js" defer></script>
-  <script src="/assets/js/app.js" defer></script>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/material.js"></script>
+  <script src="assets/js/translations.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
 </head>
 <body>
   <header class="site-header" data-header>
@@ -35,9 +35,9 @@
         <span class="sr-only" data-i18n="language.label">Language</span>
         <select id="languageSelect" aria-label="Language"></select>
       </label>
-      <md-filled-button class="compact-buy" data-plan-trigger="annual">
+      <button class="tp-button tp-button--filled compact-buy" type="button" data-plan-trigger="annual">
         <span data-i18n="common.buy">Buy now</span>
-      </md-filled-button>
+      </button>
     </div>
   </header>
 
@@ -47,12 +47,12 @@
         <h1 data-i18n="hero.title">TruePoint regional RTK corrections with survey-grade precision.</h1>
         <p data-i18n="hero.body">Subscribe online to cloud-based, multi-frequency NTRIP corrections backed by BDSTAR technology and distributed by Topomarket IKE across European and Mediterranean territories.</p>
         <div class="hero-actions">
-          <md-filled-button data-plan-trigger="annual">
+          <button class="tp-button tp-button--filled tp-button--large" type="button" data-plan-trigger="annual">
             <span data-i18n="hero.primary">Start annual subscription</span>
-          </md-filled-button>
-          <md-outlined-button href="#coverage">
+          </button>
+          <a class="tp-button tp-button--outlined tp-button--large" href="#coverage">
             <span data-i18n="hero.secondary">View coverage</span>
-          </md-outlined-button>
+          </a>
         </div>
         <div class="proof-strip" aria-label="Service highlights">
           <span><b>&lt;2cm</b><small data-i18n="proof.accuracy">horizontal accuracy target</small></span>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="hero-visual">
-        <img src="/assets/images/rtk-network-hero.svg" alt="Technical map illustration of GNSS RTK network coverage">
+        <img src="assets/images/rtk-network-hero.svg" alt="Technical map illustration of GNSS RTK network coverage">
       </div>
     </section>
 
@@ -139,28 +139,42 @@
 
   <footer class="site-footer">
     <span data-i18n="footer.copy">TruePoint CORS Network subscriptions distributed by Topomarket IKE.</span>
-    <a href="/admin/" data-i18n="footer.admin">Admin panel</a>
+    <a href="admin/" data-i18n="footer.admin">Admin panel</a>
   </footer>
 
-  <md-dialog id="checkoutDialog">
-    <div slot="headline" data-i18n="checkout.title">Complete your subscription</div>
-    <form slot="content" id="checkoutForm" class="checkout-form">
+  <dialog id="checkoutDialog" class="checkout-dialog">
+    <div class="checkout-dialog__header">
+      <h2 data-i18n="checkout.title">Complete your subscription</h2>
+    </div>
+    <form id="checkoutForm" class="checkout-form">
       <p id="selectedPlanSummary"></p>
-      <md-outlined-text-field id="customerName" label="Full name" required></md-outlined-text-field>
-      <md-outlined-text-field id="customerEmail" label="Email" type="email" required></md-outlined-text-field>
+      <label class="field-label">
+        <span data-field-label="checkout.name">Full name</span>
+        <input id="customerName" type="text" required autocomplete="name">
+      </label>
+      <label class="field-label">
+        <span data-field-label="checkout.email">Email</span>
+        <input id="customerEmail" type="email" required autocomplete="email">
+      </label>
       <label class="field-label">
         <span data-i18n="checkout.country">Service country</span>
         <select id="customerCountry" required></select>
       </label>
-      <md-outlined-text-field id="customerReceiver" label="Receiver model"></md-outlined-text-field>
-      <md-outlined-text-field id="customerNotes" label="Project notes" type="textarea" rows="3"></md-outlined-text-field>
+      <label class="field-label">
+        <span data-field-label="checkout.receiver">Receiver model</span>
+        <input id="customerReceiver" type="text" autocomplete="off">
+      </label>
+      <label class="field-label">
+        <span data-field-label="checkout.notes">Project notes</span>
+        <textarea id="customerNotes" rows="3"></textarea>
+      </label>
       <div id="paypalSetupNotice" class="notice hidden"></div>
       <div id="paypalButtons"></div>
       <p id="checkoutStatus" class="checkout-status" role="status"></p>
     </form>
-    <div slot="actions">
-      <md-text-button id="closeCheckout" data-i18n="common.close">Close</md-text-button>
+    <div class="checkout-dialog__actions">
+      <button class="tp-button tp-button--text" id="closeCheckout" type="button" data-i18n="common.close">Close</button>
     </div>
-  </md-dialog>
+  </dialog>
 </body>
 </html>
