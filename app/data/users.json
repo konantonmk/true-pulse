@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "admin@example.com",
+      "name": "TruePoint Administrator",
+      "role": "admin",
+      "active": true,
+      "password": {
+        "algorithm": "pbkdf2_sha256",
+        "iterations": 210000,
+        "salt": "4ub/Lk8lBK/WeIIPls/8kw==",
+        "hash": "b28b75b935f2d38aa0c56802c37acf0c4f08fe7f10fed28db1db69e11d157259"
+      }
+    }
+  ]
+}

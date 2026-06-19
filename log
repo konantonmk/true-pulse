@@ -1,0 +1,55 @@
+Decision log for TruePoint CORS Network website
+
+1. Backend language
+   Chosen: PHP.
+   Reason: the requested deployment target is cPanel hosting, where PHP support is normally available without custom Java server setup. Java would require a servlet container or VPS-style hosting and would make amateur cPanel deployment harder.
+
+2. Project structure
+   Chosen: public document root plus private app folder.
+   Reason: frontend files are kept in public/ while backend libraries, configuration, JSON data, and logs stay in app/. This creates a clean responsibility split between frontend designers and backend developers.
+
+3. Data storage
+   Chosen: JSON files with file locking.
+   Reason: the project can start from scratch on basic hosting without MySQL setup. For high order volume, migrating orders/users to MySQL would be the next step.
+
+4. Payment integration
+   Chosen: PayPal Orders API with server-side create and capture endpoints.
+   Reason: the client secret must never be exposed to the browser. The frontend loads only the PayPal JavaScript SDK with the client ID, while PHP creates and captures orders.
+
+5. PayPal configuration
+   Required in app/config.php:
+   - paypal.mode
+   - paypal.client_id
+   - paypal.client_secret
+   - paypal.webhook_id
+   - paypal.currency
+   Webhook URL: /api/webhook.php
+   Required PayPal webhook event: PAYMENT.CAPTURE.COMPLETED
+
+6. Provisioning
+   Chosen: generate a provisioning package after capture and email it to the customer/admin.
+   Reason: the business plan requires automated dispatch of NTRIP parameters. Real production validity still depends on TruePoint-provided caster host, mountpoints, and account rules.
+
+7. Admin panel
+   Included:
+   - business display settings
+   - pricing
+   - provisioning defaults
+   - order status updates
+   - admin password change
+   PayPal secrets remain in app/config.php rather than browser-editable admin forms.
+
+8. Frontend standard
+   Chosen: Material Web components and Material Design tokens.
+   Reason: the user requested Google Material Web standards. Components are loaded as ES modules in public/assets/js/material.js to avoid a build step on cPanel.
+
+9. Brand and visual direction
+   Chosen: white, deep navy, vivid green, restrained blue/yellow accents.
+   Reason: follows the TruePoint/geospatial technology feel and the provided business-plan positioning. Live TruePoint site fetching from PowerShell failed with a TLS receive error, so the palette was matched conservatively to the available TruePoint-style reference and domain subject.
+
+10. Localization
+   Included language selector for English plus target-market languages inferred from the territories in the business plan. English is the source text and fallback for future admin-edited content. Public interface localization strings live in public/assets/js/translations.js.
+
+11. Sites plugin
+   The Sites workflow was considered because it was requested, but the Sites hosting target is Cloudflare Worker-compatible output. This project intentionally stays PHP/cPanel-ready because the user explicitly requested PHP or Java backend and cPanel deployment instructions.
+

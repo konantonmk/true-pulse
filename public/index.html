@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TruePoint CORS Network | RTK Subscriptions</title>
+  <meta name="description" content="TruePoint CORS Network RTK subscriptions for surveyors, UAV pilots, contractors, agriculture, and engineering teams.">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script type="module" src="/assets/js/material.js"></script>
+  <script src="/assets/js/translations.js" defer></script>
+  <script src="/assets/js/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header" data-header>
+    <a class="brand" href="#top" aria-label="TruePoint home">
+      <span class="brand-mark" aria-hidden="true">TP</span>
+      <span>
+        <strong>TruePoint</strong>
+        <small>CORS Network</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#coverage" data-i18n="nav.coverage">Coverage</a>
+      <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="#setup" data-i18n="nav.setup">Receiver setup</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <label class="language-control">
+        <span class="sr-only" data-i18n="language.label">Language</span>
+        <select id="languageSelect" aria-label="Language"></select>
+      </label>
+      <md-filled-button class="compact-buy" data-plan-trigger="annual">
+        <span data-i18n="common.buy">Buy now</span>
+      </md-filled-button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero-copy">
+        <h1 data-i18n="hero.title">TruePoint regional RTK corrections with survey-grade precision.</h1>
+        <p data-i18n="hero.body">Subscribe online to cloud-based, multi-frequency NTRIP corrections backed by BDSTAR technology and distributed by Topomarket IKE across European and Mediterranean territories.</p>
+        <div class="hero-actions">
+          <md-filled-button data-plan-trigger="annual">
+            <span data-i18n="hero.primary">Start annual subscription</span>
+          </md-filled-button>
+          <md-outlined-button href="#coverage">
+            <span data-i18n="hero.secondary">View coverage</span>
+          </md-outlined-button>
+        </div>
+        <div class="proof-strip" aria-label="Service highlights">
+          <span><b>&lt;2cm</b><small data-i18n="proof.accuracy">horizontal accuracy target</small></span>
+          <span><b>13</b><small data-i18n="proof.countries">sales territories</small></span>
+          <span><b>24/7</b><small data-i18n="proof.support">technical stability</small></span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="/assets/images/rtk-network-hero.svg" alt="Technical map illustration of GNSS RTK network coverage">
+      </div>
+    </section>
+
+    <section id="coverage" class="section-shell coverage-section">
+      <div class="section-heading">
+        <h2 data-i18n="coverage.title">Coverage built around regional commercial rights.</h2>
+        <p data-i18n="coverage.body">Topomarket IKE manages exclusive distribution in ten countries and online sales rights in three additional high-growth markets.</p>
+      </div>
+      <div class="coverage-grid">
+        <div class="coverage-map" aria-label="Coverage countries">
+          <div class="map-panel">
+            <span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span><span class="node n5"></span>
+            <span class="node n6"></span><span class="node n7"></span><span class="node n8"></span><span class="node n9"></span>
+            <div class="map-line l1"></div><div class="map-line l2"></div><div class="map-line l3"></div>
+          </div>
+        </div>
+        <div class="territory-lists">
+          <article>
+            <h3 data-i18n="coverage.exclusive">Exclusive distribution territories</h3>
+            <ul id="exclusiveCountries"></ul>
+          </article>
+          <article>
+            <h3 data-i18n="coverage.online">Online sales rights territories</h3>
+            <ul id="onlineCountries"></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" class="section-shell capabilities-section">
+      <div class="section-heading align-left">
+        <h2 data-i18n="capabilities.title">RTK capability without hardware lock-in.</h2>
+        <p data-i18n="capabilities.body">The service supports the standard GNSS constellations and NTRIP workflows used by field survey, civil construction, UAV, and precision agriculture teams.</p>
+      </div>
+      <div class="capability-grid" id="capabilityGrid"></div>
+    </section>
+
+    <section id="pricing" class="section-shell pricing-section">
+      <div class="section-heading">
+        <h2 data-i18n="pricing.title">Transparent subscription tiers.</h2>
+        <p data-i18n="pricing.body">Choose the subscription window that matches your field campaign. Prices are listed before tax and use EUR as the checkout currency.</p>
+      </div>
+      <div class="pricing-grid" id="pricingGrid"></div>
+      <p class="pricing-note" data-i18n="pricing.note">PayPal checkout supports PayPal balance, debit card, and credit card payments where PayPal makes those methods available.</p>
+    </section>
+
+    <section id="setup" class="section-shell setup-section">
+      <div class="section-heading align-left">
+        <h2 data-i18n="setup.title">Configuration guidelines for GNSS receivers.</h2>
+        <p data-i18n="setup.body">After payment, the system sends the NTRIP host, port, mountpoint, username, and password. Use the matching guide below for the receiver family in the field.</p>
+      </div>
+      <div class="guide-tabs" id="guideTabs" role="tablist" aria-label="Receiver guide tabs"></div>
+      <div class="guide-panel" id="guidePanel"></div>
+    </section>
+
+    <section class="section-shell operational-section">
+      <div class="operational-copy">
+        <h2 data-i18n="ops.title">Automated purchase, logged fulfillment, admin control.</h2>
+        <p data-i18n="ops.body">The checkout flow creates the PayPal order server-side, captures payment, records the transaction, generates a provisioning package, and emails the customer. Administrators can update prices, countries, service parameters, and order status from the admin panel.</p>
+      </div>
+      <div class="ops-list">
+        <span><span class="material-symbols-outlined">payments</span><span data-i18n="ops.payments">Server-side PayPal Orders API bridge</span></span>
+        <span><span class="material-symbols-outlined">lock</span><span data-i18n="ops.security">Secrets stored only in PHP configuration</span></span>
+        <span><span class="material-symbols-outlined">admin_panel_settings</span><span data-i18n="ops.admin">Admin panel for catalog and order management</span></span>
+      </div>
+    </section>
+
+    <section id="faq" class="section-shell faq-section">
+      <div class="section-heading">
+        <h2 data-i18n="faq.title">Frequently asked questions.</h2>
+      </div>
+      <div class="faq-list" id="faqList"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span data-i18n="footer.copy">TruePoint CORS Network subscriptions distributed by Topomarket IKE.</span>
+    <a href="/admin/" data-i18n="footer.admin">Admin panel</a>
+  </footer>
+
+  <md-dialog id="checkoutDialog">
+    <div slot="headline" data-i18n="checkout.title">Complete your subscription</div>
+    <form slot="content" id="checkoutForm" class="checkout-form">
+      <p id="selectedPlanSummary"></p>
+      <md-outlined-text-field id="customerName" label="Full name" required></md-outlined-text-field>
+      <md-outlined-text-field id="customerEmail" label="Email" type="email" required></md-outlined-text-field>
+      <label class="field-label">
+        <span data-i18n="checkout.country">Service country</span>
+        <select id="customerCountry" required></select>
+      </label>
+      <md-outlined-text-field id="customerReceiver" label="Receiver model"></md-outlined-text-field>
+      <md-outlined-text-field id="customerNotes" label="Project notes" type="textarea" rows="3"></md-outlined-text-field>
+      <div id="paypalSetupNotice" class="notice hidden"></div>
+      <div id="paypalButtons"></div>
+      <p id="checkoutStatus" class="checkout-status" role="status"></p>
+    </form>
+    <div slot="actions">
+      <md-text-button id="closeCheckout" data-i18n="common.close">Close</md-text-button>
+    </div>
+  </md-dialog>
+</body>
+</html>

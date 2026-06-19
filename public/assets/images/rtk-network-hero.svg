@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">TruePoint RTK network coverage</title>
+  <desc id="desc">Technical map-style illustration with satellite arcs and connected GNSS network nodes across Europe and the Mediterranean.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.28" stop-color="#eaf2f7"/>
+      <stop offset="0.58" stop-color="#153a56"/>
+      <stop offset="1" stop-color="#071b2d"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#31e87c" stop-opacity=".95"/>
+      <stop offset=".34" stop-color="#18a957" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#18a957" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <g opacity=".16" stroke="#ffffff" stroke-width="1">
+    <path d="M0 92h1280M0 184h1280M0 276h1280M0 368h1280M0 460h1280M0 552h1280M0 644h1280"/>
+    <path d="M80 0v720M176 0v720M272 0v720M368 0v720M464 0v720M560 0v720M656 0v720M752 0v720M848 0v720M944 0v720M1040 0v720M1136 0v720M1232 0v720"/>
+  </g>
+  <g fill="#102d44" stroke="#7eb5cf" stroke-width="2" opacity=".86">
+    <path d="M351 275l58-45 86 8 40-48 65 26 48 71-27 72 56 53-29 58-79 14-56 55-86-18-63 26-83-44-5-76-59-48 33-62z"/>
+    <path d="M613 438l54 5 47 40 78-16 91 34 31 75-82 45-113-14-72 28-73-54 32-58z"/>
+    <path d="M456 545l63 25 42 47-81 38-89-21-23-58z"/>
+    <path d="M748 261l81-37 81 18 49-31 65 34 34 66-64 42-69-13-63 45-86-16z"/>
+    <path d="M987 375l86-23 86 41 19 70-67 42-99-21-67-52z"/>
+  </g>
+  <g fill="none" stroke="#5dff9a" stroke-opacity=".58" stroke-width="2">
+    <path d="M374 304C505 246 663 244 821 322S1033 480 1132 454"/>
+    <path d="M305 405c142-40 270-29 383 33 116 64 232 89 349 75"/>
+    <path d="M398 523c163-69 303-65 420 12"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-dasharray="9 12" stroke-opacity=".75" stroke-width="2">
+    <path d="M1097 94C994 207 901 282 817 319"/>
+    <path d="M1130 126C1018 263 920 357 834 407"/>
+    <path d="M1166 167C1051 349 941 471 836 533"/>
+  </g>
+  <g transform="translate(1060 58) rotate(36)" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="40" y="28" width="58" height="42" rx="6"/>
+    <rect x="-30" y="28" width="58" height="42" rx="6"/>
+    <path d="M28 49h12M99 49h31M-61 49h31M49 28L18 1M89 71l35 28"/>
+    <circle cx="69" cy="49" r="15" fill="#123653"/>
+  </g>
+  <g>
+    <circle cx="374" cy="304" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="374" cy="304" r="7" fill="#2af178"/>
+    <circle cx="491" cy="272" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="491" cy="272" r="7" fill="#2af178"/>
+    <circle cx="604" cy="316" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="604" cy="316" r="7" fill="#2af178"/>
+    <circle cx="721" cy="373" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="721" cy="373" r="7" fill="#2af178"/>
+    <circle cx="834" cy="407" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="834" cy="407" r="7" fill="#2af178"/>
+    <circle cx="956" cy="447" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="956" cy="447" r="7" fill="#2af178"/>
+    <circle cx="1037" cy="513" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="1037" cy="513" r="7" fill="#2af178"/>
+    <circle cx="487" cy="499" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="487" cy="499" r="7" fill="#2af178"/>
+    <circle cx="626" cy="532" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="626" cy="532" r="7" fill="#2af178"/>
+    <circle cx="760" cy="541" r="30" fill="url(#glow)" filter="url(#soft)"/><circle cx="760" cy="541" r="7" fill="#2af178"/>
+  </g>
+  <path d="M0 586c178-93 336-108 473-46 154 70 307 76 459 18 118-45 234-48 348-9v171H0z" fill="#071b2d" opacity=".72"/>
+  <path d="M0 600c166-86 318-96 456-29 157 76 315 83 473 21 125-49 242-50 351-5" fill="none" stroke="#18a957" stroke-width="4" opacity=".85"/>
+</svg>

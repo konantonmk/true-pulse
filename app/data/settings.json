@@ -1,0 +1,24 @@
+{
+  "business": {
+    "display_name": "Topomarket IKE",
+    "network_name": "TruePoint CORS Network",
+    "support_email": "support@true-point.com",
+    "sales_email": "sales@example.com",
+    "phone": "",
+    "vat_note": "Retail prices are shown before tax. Local VAT may apply during invoicing."
+  },
+  "checkout": {
+    "currency": "EUR",
+    "tax_rate": 0,
+    "allow_card_payments": true,
+    "manual_review_window": "Immediate activation, with a maximum 24-hour operational review window when TruePoint account verification is required."
+  },
+  "provisioning": {
+    "ntrip_host": "caster.true-point.example",
+    "ntrip_port": 2101,
+    "ntrip_tls": false,
+    "credential_prefix": "TP",
+    "default_mountpoint": "TRUEPOINT_VRS",
+    "support_email": "support@true-point.com"
+  }
+}

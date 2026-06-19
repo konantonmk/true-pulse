@@ -1,0 +1,97 @@
+TRUEPOINT WEBSITE SETUP - STEP BY STEP
+
+This guide assumes a new PC and no previous experience.
+
+1. Download the project folder
+   - Keep the folder named true-point.
+   - Do not delete the app folder. It contains the backend.
+
+2. Get hosting access
+   - Open your browser.
+   - Go to your hosting provider's cPanel login page.
+   - Log in with the username and password provided by the hosting company.
+
+3. Check PHP version
+   - In cPanel, search for "Select PHP Version" or "MultiPHP Manager".
+   - Select PHP 8.1 or newer.
+   - Make sure these PHP features are enabled if your host shows them: curl, json, session, openssl.
+
+4. Upload the files
+   Preferred method:
+   - In cPanel, open File Manager.
+   - Go to the account root folder, usually one level above public_html.
+   - Upload the whole project so you have:
+     app/
+     public/
+
+5. Set the document root
+   - In cPanel, open Domains or Subdomains.
+   - Set the website document root to the public folder.
+   - Example: /home/ACCOUNT/true-point/public
+
+   If cPanel does not allow this:
+   - Upload the contents of public/ into public_html/.
+   - Upload app/ one level above public_html/.
+   - Ask the hosting provider or developer to confirm the PHP include paths still point to app/bootstrap.php.
+
+6. Set writable permissions
+   - In File Manager, right-click app/data.
+   - Choose Permissions.
+   - Use 755 first.
+   - If admin changes do not save, ask the host whether PHP needs 775 for app/data.
+   - Repeat for app/logs.
+
+7. Configure PayPal
+   - Open app/config.php in cPanel File Manager.
+   - Find the paypal section.
+   - Replace REPLACE_WITH_PAYPAL_CLIENT_ID with the PayPal client ID.
+   - Replace REPLACE_WITH_PAYPAL_CLIENT_SECRET with the PayPal secret.
+   - Keep mode as sandbox while testing.
+   - After successful testing, change mode to live and use live PayPal credentials.
+
+8. Configure PayPal webhook
+   - In PayPal Developer Dashboard, open the app.
+   - Add webhook URL:
+     https://YOUR-DOMAIN.com/api/webhook.php
+   - Select event:
+     PAYMENT.CAPTURE.COMPLETED
+   - Copy the webhook ID.
+   - Paste it into app/config.php as webhook_id.
+
+9. Configure email
+   - In app/config.php, set admin_email, mail_from, and mail_from_name.
+   - Test a purchase in sandbox.
+   - If the customer email is not delivered, check app/logs/app.log and ask the host to enable PHP mail or provide SMTP settings.
+
+10. Configure TruePoint/NTRIP values
+   - Go to https://YOUR-DOMAIN.com/admin/
+   - Login:
+     Email: admin@example.com
+     Password: ChangeMe-TruePoint-2026!
+   - Change the password immediately.
+   - Open Provisioning defaults.
+   - Replace caster.true-point.example with the real TruePoint NTRIP host.
+   - Set the real port, TLS option, default mountpoint, credential prefix, and support email.
+
+11. Test the public website
+   - Open https://YOUR-DOMAIN.com/
+   - Change language from the selector.
+   - Open pricing.
+   - Click Buy now.
+   - Confirm the PayPal sandbox button appears.
+   - Complete a sandbox payment.
+   - Confirm the order appears in the admin panel.
+
+12. Go live
+   - Confirm HTTPS works.
+   - In app/config.php, change PayPal mode to live.
+   - Replace sandbox credentials with live credentials.
+   - Make one real low-value test if the business allows it.
+   - Confirm the email and admin order record.
+
+13. Ongoing checks
+   - Check app/logs/app.log after the first real orders.
+   - Keep a backup of app/data regularly.
+   - Review translations before running ads in each country.
+   - Update prices in the admin panel when the business changes pricing.
+

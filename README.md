@@ -10,7 +10,7 @@ Single-page public website plus PHP backend/admin panel for selling TruePoint RT
   - `public/assets/js/app.js`
   - `public/assets/js/translations.js`
   - `public/assets/js/material.js`
-  - `public/assets/images/rtk-network-hero.png`
+  - `public/assets/images/rtk-network-hero.svg`
 - PHP API endpoints:
   - `public/api/catalog.php`
   - `public/api/create-order.php`
