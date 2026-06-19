@@ -33,6 +33,10 @@ Single-page public website plus PHP backend/admin panel for selling TruePoint RT
   - `app/logs`
 - HTTPS certificate enabled before live PayPal payments.
 
+## Local Preview
+
+You can open `public/index.html` directly in a browser to review the design. In direct-file preview, the page uses built-in fallback catalog data and shows a PayPal configuration notice instead of calling the PHP API. Full checkout requires the PHP backend on a web server.
+
 ## Admin Login
 
 Default admin account:
